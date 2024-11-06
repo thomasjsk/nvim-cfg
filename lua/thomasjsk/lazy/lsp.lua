@@ -35,6 +35,10 @@ return {
             handlers = {
                 function(server_name) -- default handler (optional)
                     require("lspconfig")[server_name].setup {
+                        on_attach = function(client, buffnr)
+                            local bufopts = { noremap=true, silent=true, buffer=buffnr }
+                            vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts)
+                        end,
                         capabilities = capabilities
                     }
                 end,

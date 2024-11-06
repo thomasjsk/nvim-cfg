@@ -67,4 +67,3 @@ vim.keymap.set('n', 'Gt', ':!gt<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', 'Gb', ':!gt b<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', 'Gbc', ':!gt bc<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', 'Gl', ':!gt l<CR>', { noremap = true, silent = true })
-
