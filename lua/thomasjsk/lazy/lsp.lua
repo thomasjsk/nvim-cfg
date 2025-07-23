@@ -35,9 +35,37 @@ return {
             handlers = {
                 function(server_name) -- default handler (optional)
                     require("lspconfig")[server_name].setup {
-                        on_attach = function(client, buffnr)
-                            local bufopts = { noremap=true, silent=true, buffer=buffnr }
+                        on_attach = function(client, bufnr)
+                            local bufopts = { noremap=true, silent=true, buffer=bufnr }
+
+                            -- LSP actions
                             vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts)
+                            vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+                            vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+                            vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
+
+                            -- Diagnostic keymaps
+                            vim.keymap.set("n", "<leader>e", function()
+                                vim.diagnostic.open_float(nil, { scope = "line", border = "rounded", focusable = true })
+                            end, bufopts)
+                            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, bufopts)
+                            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, bufopts)
+                            vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, bufopts)
+
+                            -- Format on save
+                            if client.supports_method("textDocument/formatting") then
+                                vim.api.nvim_create_autocmd("BufWritePre", {
+                                    buffer = bufnr,
+                                    callback = function()
+                                        vim.lsp.buf.format({ bufnr = bufnr })
+                                    end,
+                                })
+                            end
+
+                            -- Manual format keymap
+                            vim.keymap.set("n", "<leader>f", function()
+                                vim.lsp.buf.format({ bufnr = bufnr })
+                            end, bufopts)
                         end,
                         capabilities = capabilities
                     }
@@ -61,6 +89,38 @@ return {
                     local lspconfig = require("lspconfig")
                     lspconfig.ts_ls.setup({
                         capabilities = capabilities,
+                        on_attach = function(client, bufnr)
+                            local bufopts = { noremap=true, silent=true, buffer=bufnr }
+
+                            -- LSP actions
+                            vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts)
+                            vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+                            vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+                            vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
+
+                            -- Diagnostic keymaps
+                            vim.keymap.set("n", "<leader>e", function()
+                                vim.diagnostic.open_float(nil, { scope = "line", border = "rounded", focusable = true })
+                            end, bufopts)
+                            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, bufopts)
+                            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, bufopts)
+                            vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, bufopts)
+
+                            -- Format on save
+                            if client.supports_method("textDocument/formatting") then
+                                vim.api.nvim_create_autocmd("BufWritePre", {
+                                    buffer = bufnr,
+                                    callback = function()
+                                        vim.lsp.buf.format({ bufnr = bufnr })
+                                    end,
+                                })
+                            end
+
+                            -- Manual format keymap
+                            vim.keymap.set("n", "<leader>f", function()
+                                vim.lsp.buf.format({ bufnr = bufnr })
+                            end, bufopts)
+                        end,
                         settings = {
                             completions = {
                                 completeFunctionCalls = true
@@ -72,6 +132,39 @@ return {
                 zls = function()
                     local lspconfig = require("lspconfig")
                     lspconfig.zls.setup({
+                        capabilities = capabilities,
+                        on_attach = function(client, bufnr)
+                            local bufopts = { noremap=true, silent=true, buffer=bufnr }
+
+                            -- LSP actions
+                            vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts)
+                            vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+                            vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+                            vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
+
+                            -- Diagnostic keymaps
+                            vim.keymap.set("n", "<leader>e", function()
+                                vim.diagnostic.open_float(nil, { scope = "line", border = "rounded", focusable = true })
+                            end, bufopts)
+                            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, bufopts)
+                            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, bufopts)
+                            vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, bufopts)
+
+                            -- Format on save
+                            if client.supports_method("textDocument/formatting") then
+                                vim.api.nvim_create_autocmd("BufWritePre", {
+                                    buffer = bufnr,
+                                    callback = function()
+                                        vim.lsp.buf.format({ bufnr = bufnr })
+                                    end,
+                                })
+                            end
+
+                            -- Manual format keymap
+                            vim.keymap.set("n", "<leader>f", function()
+                                vim.lsp.buf.format({ bufnr = bufnr })
+                            end, bufopts)
+                        end,
                         root_dir = lspconfig.util.root_pattern(".git", "build.zig", "zls.json"),
                         settings = {
                             zls = {
@@ -89,6 +182,38 @@ return {
                     local lspconfig = require("lspconfig")
                     lspconfig.lua_ls.setup {
                         capabilities = capabilities,
+                        on_attach = function(client, bufnr)
+                            local bufopts = { noremap=true, silent=true, buffer=bufnr }
+
+                            -- LSP actions
+                            vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts)
+                            vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+                            vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+                            vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
+
+                            -- Diagnostic keymaps
+                            vim.keymap.set("n", "<leader>e", function()
+                                vim.diagnostic.open_float(nil, { scope = "line", border = "rounded", focusable = true })
+                            end, bufopts)
+                            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, bufopts)
+                            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, bufopts)
+                            vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, bufopts)
+
+                            -- Format on save
+                            if client.supports_method("textDocument/formatting") then
+                                vim.api.nvim_create_autocmd("BufWritePre", {
+                                    buffer = bufnr,
+                                    callback = function()
+                                        vim.lsp.buf.format({ bufnr = bufnr })
+                                    end,
+                                })
+                            end
+
+                            -- Manual format keymap
+                            vim.keymap.set("n", "<leader>f", function()
+                                vim.lsp.buf.format({ bufnr = bufnr })
+                            end, bufopts)
+                        end,
                         settings = {
                             Lua = {
                                 runtime = { version = "Lua 5.1" },
@@ -111,10 +236,10 @@ return {
                 end,
             },
             mapping = cmp.mapping.preset.insert({
-                ['<C-m>'] = cmp.mapping.select_prev_item(cmp_select),
-                ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+                ['<C-k>'] = cmp.mapping.select_prev_item(cmp_select),
+                ['<C-j>'] = cmp.mapping.select_next_item(cmp_select),
                 ['<C-h>'] = cmp.mapping.confirm({ select = true }),
-                ["<C-Space>"] = cmp.mapping.complete(),
+                -- ['<C-Space>'] = cmp.mapping.confirm({ select = true }),
             }),
             sources = cmp.config.sources({
                 { name = 'nvim_lsp' },
@@ -125,7 +250,15 @@ return {
         })
 
         vim.diagnostic.config({
-            -- update_in_insert = true,
+            virtual_text = {
+                enabled = true,
+                source = "if_many",
+                prefix = "●", -- Could be '●', '▎', 'x', or any other symbol
+            },
+            signs = true,
+            underline = true,
+            update_in_insert = false,
+            severity_sort = true,
             float = {
                 focusable = false,
                 style = "minimal",
@@ -135,5 +268,6 @@ return {
                 prefix = "",
             },
         })
-    end
+    end,
+
 }
