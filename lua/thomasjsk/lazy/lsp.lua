@@ -30,8 +30,9 @@ return {
                 "rust_analyzer",
                 "gopls",
                 "ts_ls",
-                "eslint"
+                "elixirls"
             },
+
             handlers = {
                 function(server_name) -- default handler (optional)
                     require("lspconfig")[server_name].setup {
@@ -224,8 +225,69 @@ return {
                         }
                     }
                 end,
+
+                ["elixirls"] = function()
+                    local lspconfig = require("lspconfig")
+                    lspconfig.elixirls.setup({
+                        capabilities = capabilities,
+                        on_attach = function(client, bufnr)
+                            local bufopts = { noremap=true, silent=true, buffer=bufnr }
+
+                            -- LSP actions
+                            vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts)
+                            vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+                            vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+                            vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
+
+                            -- Diagnostic keymaps
+                            vim.keymap.set("n", "<leader>e", function()
+                                vim.diagnostic.open_float(nil, { scope = "line", border = "rounded", focusable = true })
+                            end, bufopts)
+                            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, bufopts)
+                            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, bufopts)
+                            vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, bufopts)
+
+                            -- Format on save
+                            if client.supports_method("textDocument/formatting") then
+                                vim.api.nvim_create_autocmd("BufWritePre", {
+                                    buffer = bufnr,
+                                    callback = function()
+                                        vim.lsp.buf.format({ bufnr = bufnr })
+                                    end,
+                                })
+                            end
+
+                            -- Manual format keymap
+                            vim.keymap.set("n", "<leader>f", function()
+                                vim.lsp.buf.format({ bufnr = bufnr })
+                            end, bufopts)
+                        end,
+                        settings = {
+                            elixirLS = {
+                                dialyzerEnabled = true,
+                                fetchDeps = true,
+                                enableTestLenses = true,
+                                suggestSpecs = true,
+                            }
+                        }
+                    })
+                end,
+
+
             }
         })
+
+        -- Keep ESLint LSP disabled to prevent "Could not find config file" errors
+        -- ESLint formatting is still available via the save hook in remap.lua
+        local lspconfig = require("lspconfig")
+        
+        -- Completely disable ESLint LSP
+        if lspconfig.eslint then
+            lspconfig.eslint.setup = function() 
+                -- Do nothing - ESLint LSP is disabled
+                return 
+            end
+        end
 
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
